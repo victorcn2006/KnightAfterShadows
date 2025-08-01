@@ -5191,8 +5191,13 @@ MonoBehaviour:
   fullScreenText:
   - On
   - Off
-  resolutions: []
-  qualities: []
+  resolutions:
+  - a
+  - b
+  qualities:
+  - Down
+  - Medium
+  - High
   buttons:
   - {fileID: 2072219544}
   - {fileID: 295806011}

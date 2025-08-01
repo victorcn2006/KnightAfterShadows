@@ -6,21 +6,12 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour {
     [SerializeField] private InputActionAsset inputs;
-
-    public static InputManager instance { get; private set; }
     public InputAction leftClick { get; private set; }
     public InputAction navigate { get; private set; }
     public bool rightNavigation { get; private set; }
 
     public bool leftNavigation { get; private set; }
     private void Awake() {
-        if (instance == null){
-            instance = this;
-        }
-        else{
-            Destroy(this.gameObject);
-            return;
-        }
         if (inputs == null)
         {
             Debug.LogError("InputManager: InputActionAsset not assigned");

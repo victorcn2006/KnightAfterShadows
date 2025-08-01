@@ -35,6 +35,7 @@ public class CarrouselManager : MonoBehaviour {
         if (Systems.instance == null || Systems.instance.inputManager == null)
         {
             // Por si no está inicializado Systems o InputManager
+            Debug.Log("InputManager o Systems es null");
             return;
         }
 
