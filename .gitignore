@@ -75,3 +75,19 @@ crashlytics-build.properties
 
 .vscode/*
 .vsconfig
+
+# FMOD - Ignore cache and unnecessary files
+.cache/
+[Aa]ssets/Plugins/FMOD/Cache/
+[Aa]ssets/Plugins/FMOD/Cache.meta
+fmod_editor.log
+**/FMODStudioCache.asset
+**/FMODStudioCache.asset.meta
+
+# FMOD - Keep banks in version control but ignore .restore files
+*.restore
+*.restore.meta
+
+# FMOD - Ignore built banks (uncomment if you build banks in Unity)
+# [Aa]ssets/StreamingAssets/*.bank
+# [Aa]ssets/StreamingAssets/*.bank.meta

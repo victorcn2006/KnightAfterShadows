@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{f18c40cb-c9b7-4235-81b8-6c95fdb39cee}">
+		<property name="assetPath">
+			<value>47313572-ui-sounds-pack-3-4-359718.mp3</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.10448979591836735</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{db9389f4-266f-4d86-be7e-f02b825d1849}</destination>
+		</relationship>
+	</object>
+</objects>

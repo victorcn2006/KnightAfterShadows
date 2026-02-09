@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="Workspace" id="{cc94b484-107a-4624-b080-a72d85990963}">
+		<property name="builtBanksOutputDirectory">
+			<value>E:/Unity/KnightAfterShadows/FMOD</value>
+		</property>
+		<relationship name="masterEventFolder">
+			<destination>{b925adad-9f76-4aa2-98af-c26e2e362a14}</destination>
+		</relationship>
+		<relationship name="masterTagFolder">
+			<destination>{b7297e50-75f0-4a22-8c41-1f0783b28477}</destination>
+		</relationship>
+		<relationship name="masterEffectPresetFolder">
+			<destination>{11fb7fe2-7484-446f-97f3-763b631cb645}</destination>
+		</relationship>
+		<relationship name="masterParameterPresetFolder">
+			<destination>{5eebc7bf-cfe2-4c74-956d-c7d8b382bea7}</destination>
+		</relationship>
+		<relationship name="masterBankFolder">
+			<destination>{6ccac2ad-a621-4a78-a481-79f698335303}</destination>
+		</relationship>
+		<relationship name="masterSandboxFolder">
+			<destination>{851d9ad4-0ebb-46ac-9b04-5b5f0f569a96}</destination>
+		</relationship>
+		<relationship name="masterAssetFolder">
+			<destination>{db9389f4-266f-4d86-be7e-f02b825d1849}</destination>
+		</relationship>
+		<relationship name="mixer">
+			<destination>{03c6e617-669f-415f-b0ac-f4e053dadcb2}</destination>
+		</relationship>
+		<relationship name="profilerSessionFolder">
+			<destination>{be53f30c-9677-4f81-ae89-dceaf71997e9}</destination>
+		</relationship>
+		<relationship name="platforms">
+			<destination>{8c8e9610-3f10-406c-8bf4-39b9d0de5648}</destination>
+		</relationship>
+	</object>
+</objects>
