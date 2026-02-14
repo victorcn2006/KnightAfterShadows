@@ -1038,7 +1038,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f32ef1827e935fb48af176e05a97f963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: World
+  sceneToLoad: Login
   action: 0
   clickSound:
     Guid:
