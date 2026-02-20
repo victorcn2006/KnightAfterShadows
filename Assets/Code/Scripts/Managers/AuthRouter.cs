@@ -8,12 +8,15 @@ using UnityEngine.UI;
 
 public class AuthRouter : MonoBehaviour
 {
+    [Header("User Inputs")]
     [SerializeField] private TMP_InputField userInput;
     [SerializeField] private TMP_InputField passwordInput;
 
+    [Header("Login/Register Button")]
     [SerializeField] private Button loginButton;
     [SerializeField] private Button registerButton;
 
+    [Header("Toast input")]
     [SerializeField] private TMP_Text feedbackText;
 
     
