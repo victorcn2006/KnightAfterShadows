@@ -22,7 +22,7 @@ public class SQLiteReader : MonoBehaviour {
                 CreateItemTable(connection);
                 CreatePlayer(connection);
                 CreateInventory(connection);
-                CreateItemTable(connection);
+                CreateUsers(connection);
             }
         } catch(Exception ex) {
             Debug.LogError($"[SQLite] Initialization failed: {ex.Message}");
@@ -83,7 +83,7 @@ public class SQLiteReader : MonoBehaviour {
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
             stackable INTEGER,
             max_amount INTEGER, 
-            name TET, 
+            name TEXT, 
             description TEXT)";
 
             command.ExecuteNonQuery();
@@ -97,7 +97,7 @@ public class SQLiteReader : MonoBehaviour {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT,
                 description TEXT,
-                element 
+                element text not null default 'Fire'
             )";
 
             command.ExecuteNonQuery();
@@ -109,8 +109,11 @@ public class SQLiteReader : MonoBehaviour {
             command.CommandText = 
             @"CREATE TABLE IF NOT EXISTS INVENTORY(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER FOREIGN KEY,
-            max_slots INTEGER)";
+            user_id INTEGER NOT NULL,
+            max_slots INTEGER,
+            FOREIGN KEY(user_id) REFERENCES USERS(id))";
+
+            command.ExecuteNonQuery();
         }
     }
 
@@ -119,19 +122,17 @@ public class SQLiteReader : MonoBehaviour {
             command.CommandText =
             @"CREATE TABLE IF NOT EXISTS INVENTORY_ITEM(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            item_definition_id INTEGER FOREIGN KEY,
-            inventory_id INTEGER FOREIGN KEY,
+            item_definition_id INTEGER NOT NULL,
+            inventory_id INTEGER NOT NULL,
             slot_index INTEGER,
-            amount INTEGER)";
+            amount INTEGER,
+            FOREIGN KEY(item_definition_id) REFERENCES ITEM_DEFINITION(id),
+            FOREIGN KEY(inventory_id) REFERENCES INVENTORY(id))";
+
+            command.ExecuteNonQuery();
         }
     }
     #endregion
-    public enum Element { 
-        Fire,
-        Wind,
-        Dirt,
-        Water
-    }
 
     private void CreateUsers(IDbConnection connection) {
         using (IDbCommand command = connection.CreateCommand()) {
@@ -140,6 +141,8 @@ public class SQLiteReader : MonoBehaviour {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE NOT NULL,
             password_hash TEXT NOT NULL)";
+
+            command.ExecuteNonQuery();
         }
     }
     public class ItemDefinition {
@@ -148,5 +151,54 @@ public class SQLiteReader : MonoBehaviour {
         public int MaxAmount;
         public string Name;
         public string Description;
+    }
+
+    public int ValidateUser(string username, string passwordHash) {
+        try {
+            using (var connection = GetConnection()) {
+                connection.Open();
+                using (var command = connection.CreateCommand()) {
+                    command.CommandText =
+                        "SELECT id FROM USERS WHERE username = @user AND password_hash = @hash LIMIT 1;";
+                    var p1 = command.CreateParameter(); p1.ParameterName = "@user"; p1.Value = username;
+                    var p2 = command.CreateParameter(); p2.ParameterName = "@hash"; p2.Value = passwordHash;
+                    command.Parameters.Add(p1); command.Parameters.Add(p2);
+                    using (var reader = command.ExecuteReader())
+                        if (reader.Read()) return reader.GetInt32(0);
+                }
+            }
+        } catch (Exception ex) { Debug.LogError($"[SQLite] ValidateUser: {ex.Message}"); }
+        return -1;
+    }
+
+    public bool RegisterUser(string username, string passwordHash) {
+        try {
+            using (var connection = GetConnection()) {
+                connection.Open();
+                using (var command = connection.CreateCommand()) {
+                    command.CommandText =
+                        "INSERT INTO USERS (username, password_hash) VALUES (@user, @hash);";
+                    var p1 = command.CreateParameter(); p1.ParameterName = "@user"; p1.Value = username;
+                    var p2 = command.CreateParameter(); p2.ParameterName = "@hash"; p2.Value = passwordHash;
+                    command.Parameters.Add(p1); command.Parameters.Add(p2);
+                    command.ExecuteNonQuery();
+                    return true;
+                }
+            }
+        } catch (Exception ex) { Debug.LogError($"[SQLite] RegisterUser: {ex.Message}"); return false; }
+    }
+
+    public bool UsernameExists(string username) {
+        try {
+            using (var connection = GetConnection()) {
+                connection.Open();
+                using (var command = connection.CreateCommand()) {
+                    command.CommandText = "SELECT COUNT(1) FROM USERS WHERE username = @user;";
+                    var p = command.CreateParameter(); p.ParameterName = "@user"; p.Value = username;
+                    command.Parameters.Add(p);
+                    return Convert.ToInt32(command.ExecuteScalar()) > 0;
+                }
+            }
+        } catch (Exception ex) { Debug.LogError($"[SQLite] UsernameExists: {ex.Message}"); return false; }
     }
 }
