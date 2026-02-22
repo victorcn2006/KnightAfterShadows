@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44da4a77e508e27419aaaf0baaea07cb, type: 3}
   m_Name: Crossbow
   m_EditorClassIdentifier: 
-  id: 0
+  id: 2
   itemName: Crossbow
   description: 
   icon: {fileID: 21300000, guid: 864a823db9fd2fc48a70dc9fe44f5667, type: 3}

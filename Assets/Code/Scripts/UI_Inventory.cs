@@ -53,4 +53,54 @@ public class UI_Inventory : MonoBehaviour
     public Item GetSelectedItem() {
         return selectedSlot != null ? selectedSlot.GetItem() : null;
     }
+
+    /// <summary>
+    /// Drop 1 item from the selected stack
+    /// </summary>
+    public void DropSelectedItem() {
+        Item selectedItem = GetSelectedItem();
+        if (selectedItem == null)
+        {
+            Debug.LogWarning("[UI_Inventory] No item selected to drop!");
+            return;
+        }
+
+        // Decrease amount
+        selectedItem.amount--;
+        Debug.Log($"[UI_Inventory] Dropped 1x {selectedItem.GetName()} (remaining: {selectedItem.amount})");
+
+        // If stack is now empty, remove completely
+        if (selectedItem.amount <= 0)
+        {
+            RemoveSelectedItemFromInventory();
+            Debug.Log($"[UI_Inventory] Stack empty, removed item completely");
+        }
+
+        // Save and refresh
+        InventoryManager.instance.SaveCurrentInventory();
+        RefreshUI();
+    }
+
+    /// <summary>
+    /// Helper method to remove the selected item from inventory
+    /// </summary>
+    private void RemoveSelectedItemFromInventory() {
+        if (selectedSlot == null) return;
+
+        Item selectedItem = selectedSlot.GetItem();
+
+        // Find and remove from inventory list
+        for (int i = 0; i < inventory.itemList.Count; i++)
+        {
+            if (inventory.itemList[i] == selectedItem)
+            {
+                inventory.RemoveItem(i);
+                break;
+            }
+        }
+
+        // Deselect the slot
+        selectedSlot.SetSelected(false);
+        selectedSlot = null;
+    }
 }

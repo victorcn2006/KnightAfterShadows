@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Inventory
-{
+public class Inventory {
     public int userId;
     public List<Item> itemList;
     public int maxSlots = 8;
@@ -29,16 +27,24 @@ public class Inventory
     /// Add an item to the inventory with stacking support
     /// </summary>
     public void AddItem(Item item) {
+        if (item == null || item.itemData == null)
+        {
+            Debug.LogWarning("[Inventory] Trying to add invalid item!");
+            return;
+        }
+
         // Try to stack with existing items first
         bool stacked = false;
         foreach (var existingItem in itemList)
         {
-            if (existingItem.itemType == item.itemType &&
-                existingItem.amount < 99)
-            { // Max stack of 99
+            if (existingItem.itemData != null &&
+                existingItem.itemData.id == item.itemData.id &&
+                existingItem.amount < item.itemData.maxStackAmount)
+            {
+
                 existingItem.amount += item.amount;
                 stacked = true;
-                Debug.Log($"[Inventory] Item stacked. New amount: {existingItem.amount}");
+                Debug.Log($"[Inventory] Item stacked: {item.GetName()} (new amount: {existingItem.amount})");
                 break;
             }
         }
@@ -47,11 +53,11 @@ public class Inventory
         if (!stacked && itemList.Count < maxSlots)
         {
             itemList.Add(item);
-            Debug.Log($"[Inventory] Item added: {item.itemType}");
+            Debug.Log($"[Inventory] Item added: {item.GetName()}");
         }
         else if (!stacked)
         {
-            Debug.LogWarning("[Inventory] Inventory is full! Cannot add item.");
+            Debug.LogWarning($"[Inventory] Inventory is full! Cannot add {item.GetName()}");
         }
     }
 
@@ -63,7 +69,7 @@ public class Inventory
         {
             Item removed = itemList[index];
             itemList.RemoveAt(index);
-            Debug.Log($"[Inventory] Removed item at index {index}: {removed.itemType}");
+            Debug.Log($"[Inventory] Removed item at index {index}: {removed.GetName()}");
         }
     }
 

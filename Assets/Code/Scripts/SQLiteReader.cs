@@ -1,4 +1,4 @@
-using Mono.Data.Sqlite;
+﻿using Mono.Data.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,15 +9,25 @@ public class SQLiteReader : MonoBehaviour {
     public static SQLiteReader instance { get; private set; }
     string dbPath => "URI=file:" + Application.dataPath + "/MyDatabase.sqlite";
 
+    // Cache of all ItemData assets to avoid repeated Resources.LoadAll
+    private static Dictionary<int, ItemData> itemDataCache = new Dictionary<int, ItemData>();
+    private static bool cacheInitialized = false;
+
     #region Initialization
 
     private void Awake() {
         if (instance == null) instance = this;
         else Destroy(this.gameObject);
 
+        // Initialize ItemData cache
+        if (!cacheInitialized)
+        {
+            InitializeItemDataCache();
+            cacheInitialized = true;
+        }
+
         try
         {
-            //using destroys the object and close the connection when it's finished instead of using Dispose
             using (var connection = GetConnection())
             {
                 connection.Open();
@@ -32,6 +42,36 @@ public class SQLiteReader : MonoBehaviour {
         {
             Debug.LogError($"[SQLite] Initialization failed: {ex.Message}");
         }
+    }
+
+    private void InitializeItemDataCache() {
+        Debug.Log("[SQLite] Initializing ItemData cache...");
+
+        // Load all ItemData from Resources/Code/ScriptableObjects
+        var allItems = Resources.LoadAll<ItemData>("Code/ScriptableObjects");
+
+        if (allItems.Length == 0)
+        {
+            Debug.LogError("[SQLite] ❌ No ItemData found in Resources/Code/ScriptableObjects!");
+            return;
+        }
+
+        Debug.Log($"[SQLite] Found {allItems.Length} ItemData assets");
+
+        foreach (var itemData in allItems)
+        {
+            // If item doesn't have a valid ID, skip it
+            if (itemData.id <= 0)
+            {
+                Debug.LogWarning($"[SQLite] ⚠ ItemData '{itemData.itemName}' has invalid ID: {itemData.id}. Skipping!");
+                continue;
+            }
+
+            itemDataCache[itemData.id] = itemData;
+            Debug.Log($"[SQLite] ✓ Cached: ID {itemData.id} → {itemData.itemName}");
+        }
+
+        Debug.Log($"[SQLite] ✓ ItemData cache initialized with {itemDataCache.Count} items");
     }
 
     private IDbConnection GetConnection() {
@@ -125,7 +165,6 @@ public class SQLiteReader : MonoBehaviour {
         }
     }
 
-
     private void CreateInventoryItems(IDbConnection connection) {
         using (IDbCommand command = connection.CreateCommand())
         {
@@ -142,6 +181,7 @@ public class SQLiteReader : MonoBehaviour {
             command.ExecuteNonQuery();
         }
     }
+
     #endregion
 
     private void CreateUsers(IDbConnection connection) {
@@ -156,6 +196,7 @@ public class SQLiteReader : MonoBehaviour {
             command.ExecuteNonQuery();
         }
     }
+
     public class ItemDefinition {
         public int Id;
         public bool Stackable;
@@ -273,18 +314,28 @@ public class SQLiteReader : MonoBehaviour {
                         {
                             while (reader.Read())
                             {
-                                int itemTypeId = reader.GetInt32(0);
+                                int itemDataId = reader.GetInt32(0);
                                 int amount = reader.GetInt32(1);
-                                // Create item with correct constructor
-                                Item newItem = new Item((Item.Item_Type)itemTypeId, amount);
-                                items.Add(newItem);
+
+                                Debug.Log($"[SQLite] Loading item ID: {itemDataId}, Amount: {amount}");
+
+                                // Get ItemData from cache
+                                if (itemDataCache.TryGetValue(itemDataId, out ItemData itemData))
+                                {
+                                    Item newItem = new Item(itemData, amount);
+                                    items.Add(newItem);
+                                    Debug.Log($"[SQLite] ✓ Loaded item: {itemData.itemName} x{amount}");
+                                }
+                                else
+                                {
+                                    Debug.LogError($"[SQLite] ❌ ItemData with ID {itemDataId} not found in cache!");
+                                    Debug.Log($"[SQLite] Available IDs in cache: {string.Join(", ", itemDataCache.Keys)}");
+                                }
                             }
                         }
                     }
                     return new Inventory(userId, items, maxSlots);
                 }
-
-
             }
         }
         catch (Exception ex)
@@ -377,6 +428,10 @@ public class SQLiteReader : MonoBehaviour {
                 for (int i = 0; i < inventory.itemList.Count; i++)
                 {
                     var item = inventory.itemList[i];
+                    if (item.itemData == null) continue;
+
+                    Debug.Log($"[SQLite] Saving item: {item.itemData.itemName} (ID: {item.itemData.id}) x{item.amount}");
+
                     using (var command = connection.CreateCommand())
                     {
                         command.CommandText = @"
@@ -386,7 +441,7 @@ public class SQLiteReader : MonoBehaviour {
 
                         var p1 = command.CreateParameter();
                         p1.ParameterName = "@itemDefId";
-                        p1.Value = (int)item.itemType;
+                        p1.Value = item.itemData.id;
 
                         var p2 = command.CreateParameter();
                         p2.ParameterName = "@inventoryId";
@@ -408,7 +463,7 @@ public class SQLiteReader : MonoBehaviour {
                     }
                 }
 
-                Debug.Log($"[SQLite] Inventory saved for user {inventory.userId}");
+                Debug.Log($"[SQLite] Inventory saved for user {inventory.userId}. Saved {inventory.itemList.Count} items");
             }
         }
         catch (Exception ex)
