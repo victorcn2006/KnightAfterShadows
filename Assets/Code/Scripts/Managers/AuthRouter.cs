@@ -41,6 +41,7 @@ public class AuthRouter : MonoBehaviour
         }
 
         UserSession.Login(userId, user);
+        InventoryManager.instance.LoadInventoryForUser(userId);
         SceneManager.LoadScene("World");
         Debug.Log($"[Auth] User {user} logged in successfully.");
     }

@@ -15,9 +15,11 @@ public class SQLiteReader : MonoBehaviour {
         if (instance == null) instance = this;
         else Destroy(this.gameObject);
 
-        try {
+        try
+        {
             //using destroys the object and close the connection when it's finished instead of using Dispose
-            using (var connection = GetConnection()) { 
+            using (var connection = GetConnection())
+            {
                 connection.Open();
                 CreateItemTable(connection);
                 CreatePlayer(connection);
@@ -25,12 +27,14 @@ public class SQLiteReader : MonoBehaviour {
                 CreateInventoryItems(connection);
                 CreateUsers(connection);
             }
-        } catch(Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Debug.LogError($"[SQLite] Initialization failed: {ex.Message}");
         }
     }
 
-    private IDbConnection GetConnection(){
+    private IDbConnection GetConnection() {
         return new SqliteConnection(dbPath);
     }
 
@@ -79,7 +83,8 @@ public class SQLiteReader : MonoBehaviour {
 
     #region Table Creation
     private void CreateItemTable(IDbConnection connection) {
-        using (IDbCommand command = connection.CreateCommand()) {
+        using (IDbCommand command = connection.CreateCommand())
+        {
             command.CommandText = @"CREATE TABLE IF NOT EXISTS ITEM_DEFINITION (
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
             stackable INTEGER,
@@ -92,7 +97,8 @@ public class SQLiteReader : MonoBehaviour {
     }
 
     private void CreatePlayer(IDbConnection connection) {
-        using (IDbCommand command = connection.CreateCommand()) {
+        using (IDbCommand command = connection.CreateCommand())
+        {
             command.CommandText =
             @"CREATE TABLE IF NOT EXISTS PLAYER(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -105,9 +111,10 @@ public class SQLiteReader : MonoBehaviour {
         }
     }
 
-    private void CreateInventory(IDbConnection connection){
-        using(IDbCommand command = connection.CreateCommand()){
-            command.CommandText = 
+    private void CreateInventory(IDbConnection connection) {
+        using (IDbCommand command = connection.CreateCommand())
+        {
+            command.CommandText =
             @"CREATE TABLE IF NOT EXISTS INVENTORY(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL UNIQUE,
@@ -138,7 +145,8 @@ public class SQLiteReader : MonoBehaviour {
     #endregion
 
     private void CreateUsers(IDbConnection connection) {
-        using (IDbCommand command = connection.CreateCommand()) {
+        using (IDbCommand command = connection.CreateCommand())
+        {
             command.CommandText =
             @"CREATE TABLE IF NOT EXISTS USERS(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -157,10 +165,13 @@ public class SQLiteReader : MonoBehaviour {
     }
 
     public int ValidateUser(string username, string passwordHash) {
-        try {
-            using (var connection = GetConnection()) {
+        try
+        {
+            using (var connection = GetConnection())
+            {
                 connection.Open();
-                using (var command = connection.CreateCommand()) {
+                using (var command = connection.CreateCommand())
+                {
                     command.CommandText =
                         "SELECT id FROM USERS WHERE username = @user AND password_hash = @hash LIMIT 1;";
                     var p1 = command.CreateParameter(); p1.ParameterName = "@user"; p1.Value = username;
@@ -170,15 +181,19 @@ public class SQLiteReader : MonoBehaviour {
                         if (reader.Read()) return reader.GetInt32(0);
                 }
             }
-        } catch (Exception ex) { Debug.LogError($"[SQLite] ValidateUser: {ex.Message}"); }
+        }
+        catch (Exception ex) { Debug.LogError($"[SQLite] ValidateUser: {ex.Message}"); }
         return -1;
     }
 
     public bool RegisterUser(string username, string passwordHash) {
-        try {
-            using (var connection = GetConnection()) {
+        try
+        {
+            using (var connection = GetConnection())
+            {
                 connection.Open();
-                using (var command = connection.CreateCommand()) {
+                using (var command = connection.CreateCommand())
+                {
                     command.CommandText =
                         "INSERT INTO USERS (username, password_hash) VALUES (@user, @hash);";
                     var p1 = command.CreateParameter(); p1.ParameterName = "@user"; p1.Value = username;
@@ -188,20 +203,219 @@ public class SQLiteReader : MonoBehaviour {
                     return true;
                 }
             }
-        } catch (Exception ex) { Debug.LogError($"[SQLite] RegisterUser: {ex.Message}"); return false; }
+        }
+        catch (Exception ex) { Debug.LogError($"[SQLite] RegisterUser: {ex.Message}"); return false; }
     }
 
     public bool UsernameExists(string username) {
-        try {
-            using (var connection = GetConnection()) {
+        try
+        {
+            using (var connection = GetConnection())
+            {
                 connection.Open();
-                using (var command = connection.CreateCommand()) {
+                using (var command = connection.CreateCommand())
+                {
                     command.CommandText = "SELECT COUNT(1) FROM USERS WHERE username = @user;";
                     var p = command.CreateParameter(); p.ParameterName = "@user"; p.Value = username;
                     command.Parameters.Add(p);
                     return Convert.ToInt32(command.ExecuteScalar()) > 0;
                 }
             }
-        } catch (Exception ex) { Debug.LogError($"[SQLite] UsernameExists: {ex.Message}"); return false; }
+        }
+        catch (Exception ex) { Debug.LogError($"[SQLite] UsernameExists: {ex.Message}"); return false; }
     }
+
+    #region Inventory Methods
+
+    public Inventory LoadInventory(int userId) {
+        try
+        {
+            using (var connection = GetConnection())
+            {
+                connection.Open();
+                var items = new List<Item>();
+
+                // Get inventory metadata
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText =
+                        "SELECT max_slots FROM INVENTORY WHERE user_id = @userId LIMIT 1;";
+                    var p = command.CreateParameter();
+                    p.ParameterName = "@userId";
+                    p.Value = userId;
+                    command.Parameters.Add(p);
+
+                    int maxSlots = 8; // Default
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            maxSlots = reader.GetInt32(0);
+                        }
+                    }
+
+                    // Get all items for this user
+                    using (var itemCommand = connection.CreateCommand())
+                    {
+                        itemCommand.CommandText = @"
+                        SELECT ii.item_definition_id, ii.amount 
+                        FROM INVENTORY_ITEM ii
+                        INNER JOIN INVENTORY i ON ii.inventory_id = i.id
+                        WHERE i.user_id = @userId
+                        ORDER BY ii.slot_index;";
+
+                        var userParam = itemCommand.CreateParameter();
+                        userParam.ParameterName = "@userId";
+                        userParam.Value = userId;
+                        itemCommand.Parameters.Add(userParam);
+
+                        using (var reader = itemCommand.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                int itemTypeId = reader.GetInt32(0);
+                                int amount = reader.GetInt32(1);
+                                // Create item with correct constructor
+                                Item newItem = new Item((Item.Item_Type)itemTypeId, amount);
+                                items.Add(newItem);
+                            }
+                        }
+                    }
+                    return new Inventory(userId, items, maxSlots);
+                }
+
+
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[SQLite] LoadInventory failed: {ex.Message}");
+            return null;
+        }
+    }
+
+    public void SaveInventory(Inventory inventory) {
+        if (inventory == null) return;
+
+        try
+        {
+            using (var connection = GetConnection())
+            {
+                connection.Open();
+
+                // Get or create inventory record
+                int inventoryId = -1;
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText =
+                        "SELECT id FROM INVENTORY WHERE user_id = @userId;";
+                    var p = command.CreateParameter();
+                    p.ParameterName = "@userId";
+                    p.Value = inventory.userId;
+                    command.Parameters.Add(p);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            inventoryId = reader.GetInt32(0);
+                        }
+                    }
+                }
+
+                // Create inventory if it doesn't exist
+                if (inventoryId == -1)
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText =
+                            "INSERT INTO INVENTORY (user_id, max_slots) VALUES (@userId, @maxSlots);";
+                        var p1 = command.CreateParameter();
+                        p1.ParameterName = "@userId";
+                        p1.Value = inventory.userId;
+                        var p2 = command.CreateParameter();
+                        p2.ParameterName = "@maxSlots";
+                        p2.Value = inventory.maxSlots;
+                        command.Parameters.Add(p1);
+                        command.Parameters.Add(p2);
+                        command.ExecuteNonQuery();
+                    }
+
+                    // Get the newly created inventory ID
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText =
+                            "SELECT id FROM INVENTORY WHERE user_id = @userId;";
+                        var p = command.CreateParameter();
+                        p.ParameterName = "@userId";
+                        p.Value = inventory.userId;
+                        command.Parameters.Add(p);
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                inventoryId = reader.GetInt32(0);
+                            }
+                        }
+                    }
+                }
+
+                // Clear existing items
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText =
+                        "DELETE FROM INVENTORY_ITEM WHERE inventory_id = @inventoryId;";
+                    var p = command.CreateParameter();
+                    p.ParameterName = "@inventoryId";
+                    p.Value = inventoryId;
+                    command.Parameters.Add(p);
+                    command.ExecuteNonQuery();
+                }
+
+                // Save current items
+                for (int i = 0; i < inventory.itemList.Count; i++)
+                {
+                    var item = inventory.itemList[i];
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = @"
+                        INSERT INTO INVENTORY_ITEM 
+                        (item_definition_id, inventory_id, slot_index, amount) 
+                        VALUES (@itemDefId, @inventoryId, @slotIndex, @amount);";
+
+                        var p1 = command.CreateParameter();
+                        p1.ParameterName = "@itemDefId";
+                        p1.Value = (int)item.itemType;
+
+                        var p2 = command.CreateParameter();
+                        p2.ParameterName = "@inventoryId";
+                        p2.Value = inventoryId;
+
+                        var p3 = command.CreateParameter();
+                        p3.ParameterName = "@slotIndex";
+                        p3.Value = i;
+
+                        var p4 = command.CreateParameter();
+                        p4.ParameterName = "@amount";
+                        p4.Value = item.amount;
+
+                        command.Parameters.Add(p1);
+                        command.Parameters.Add(p2);
+                        command.Parameters.Add(p3);
+                        command.Parameters.Add(p4);
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                Debug.Log($"[SQLite] Inventory saved for user {inventory.userId}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[SQLite] SaveInventory failed: {ex.Message}");
+        }
+    }
+
+    #endregion
 }

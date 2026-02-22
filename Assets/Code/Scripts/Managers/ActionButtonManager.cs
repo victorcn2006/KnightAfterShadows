@@ -54,15 +54,19 @@ public class ActionButtonManager : MonoBehaviour, IPointerEnterHandler, ISelectH
 
         switch (action) {
             case ACTIONS.PLAY:
+                InventoryManager.instance.SaveCurrentInventory();
                 SceneManager.LoadScene(sceneToLoad);
                 break;
             case ACTIONS.OPTIONS:
+                InventoryManager.instance.SaveCurrentInventory();
                 SceneManager.LoadScene(sceneToLoad);
                 break;
             case ACTIONS.RETURN:
+                InventoryManager.instance.SaveCurrentInventory();
                 SceneManager.LoadScene(sceneToLoad);
                 break;
             case ACTIONS.EXIT:
+                InventoryManager.instance.SaveCurrentInventory();
                 Application.Quit();
                 Debug.Log("Exit");
                 break;
