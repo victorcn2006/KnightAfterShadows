@@ -91,3 +91,7 @@ fmod_editor.log
 # FMOD - Ignore built banks (uncomment if you build banks in Unity)
 # [Aa]ssets/StreamingAssets/*.bank
 # [Aa]ssets/StreamingAssets/*.bank.meta
+
+#Unnecesay Icons
+Assets/16x16/*
+16x16.meta

@@ -22,6 +22,7 @@ public class SQLiteReader : MonoBehaviour {
                 CreateItemTable(connection);
                 CreatePlayer(connection);
                 CreateInventory(connection);
+                CreateInventoryItems(connection);
                 CreateUsers(connection);
             }
         } catch(Exception ex) {
@@ -109,25 +110,27 @@ public class SQLiteReader : MonoBehaviour {
             command.CommandText = 
             @"CREATE TABLE IF NOT EXISTS INVENTORY(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
-            max_slots INTEGER,
+            user_id INTEGER NOT NULL UNIQUE,
+            max_slots INTEGER DEFAULT 8,
             FOREIGN KEY(user_id) REFERENCES USERS(id))";
 
             command.ExecuteNonQuery();
         }
     }
 
-    private void CreateItems(IDbConnection connection) {
-        using (IDbCommand command = connection.CreateCommand()){
+
+    private void CreateInventoryItems(IDbConnection connection) {
+        using (IDbCommand command = connection.CreateCommand())
+        {
             command.CommandText =
             @"CREATE TABLE IF NOT EXISTS INVENTORY_ITEM(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            item_definition_id INTEGER NOT NULL,
-            inventory_id INTEGER NOT NULL,
-            slot_index INTEGER,
-            amount INTEGER,
-            FOREIGN KEY(item_definition_id) REFERENCES ITEM_DEFINITION(id),
-            FOREIGN KEY(inventory_id) REFERENCES INVENTORY(id))";
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        item_definition_id INTEGER NOT NULL,
+        inventory_id INTEGER NOT NULL,
+        slot_index INTEGER,
+        amount INTEGER,
+        FOREIGN KEY(item_definition_id) REFERENCES ITEM_DEFINITION(id),
+        FOREIGN KEY(inventory_id) REFERENCES INVENTORY(id))";
 
             command.ExecuteNonQuery();
         }
