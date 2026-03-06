@@ -1,152 +1,103 @@
-using Mono.Data.Sqlite;
+using SQLite4Unity3d;
 using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Linq;
 using UnityEngine;
+using System.IO;
 
 public class SQLiteReader : MonoBehaviour {
 
     public static SQLiteReader instance { get; private set; }
-    string dbPath => "URI=file:" + Application.dataPath + "/MyDatabase.sqlite";
-
-    #region Initialization
+    
+    private SQLiteConnection _connection;
 
     private void Awake() {
-        if (instance == null) instance = this;
-        else Destroy(this.gameObject);
+        if (instance == null) {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+            InitializeDatabase();
+        } else {
+            Destroy(this.gameObject);
+        }
+    }
 
+    private void InitializeDatabase() {
+        string dbPath = Path.Combine(Application.dataPath, "MyDatabase.sqlite");
+        
         try {
-            //using destroys the object and close the connection when it's finished instead of using Dispose
-            using (var connection = GetConnection()) { 
-                connection.Open();
-                CreateItemTable(connection);
-                CreatePlayer(connection);
-                CreateInventory(connection);
-                CreateItemTable(connection);
-            }
+            _connection = new SQLiteConnection(dbPath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create);
+            
+            // Migrate tables to ORM
+            _connection.CreateTable<User>();
+            _connection.CreateTable<ItemDefinition>();
+            // You can add more tables here: CreateTable<Player>(), etc.
+            
+            Debug.Log("[SQLite] Database initialized with ORM.");
         } catch(Exception ex) {
             Debug.LogError($"[SQLite] Initialization failed: {ex.Message}");
         }
     }
 
-    private IDbConnection GetConnection(){
-        return new SqliteConnection(dbPath);
+    #region User Operations
+
+    public bool RegisterUser(string username, string password) {
+        try {
+            var newUser = new User {
+                username = username,
+                password_hash = password // In a real app, hash this!
+            };
+            _connection.Insert(newUser);
+            return true;
+        } catch (Exception ex) {
+            Debug.LogError($"[SQLite] Registration failed: {ex.Message}");
+            return false;
+        }
+    }
+
+    public bool ValidateUser(string username, string password) {
+        try {
+            var user = _connection.Table<User>()
+                .Where(u => u.username == username && u.password_hash == password)
+                .FirstOrDefault();
+            return user != null;
+        } catch (Exception ex) {
+            Debug.LogError($"[SQLite] Validation failed: {ex.Message}");
+            return false;
+        }
+    }
+
+    public List<User> GetAllUsers() {
+        try {
+            return _connection.Table<User>().ToList();
+        } catch (Exception ex) {
+            Debug.LogError($"[SQLite] Failed to get users: {ex.Message}");
+            return new List<User>();
+        }
+    }
+
+    public bool DeleteUser(int userId) {
+        try {
+            _connection.Delete<User>(userId);
+            Debug.Log($"[SQLite] User with ID {userId} deleted.");
+            return true;
+        } catch (Exception ex) {
+            Debug.LogError($"[SQLite] Delete failed: {ex.Message}");
+            return false;
+        }
     }
 
     #endregion
 
-    #region Reader
+    #region Item Operations
+
     public List<ItemDefinition> GetAllItems() {
-        var items = new List<ItemDefinition>();
-
-        try
-        {
-            using (var connection = GetConnection())
-            {
-                connection.Open();
-
-                using (var command = connection.CreateCommand())
-                {
-                    command.CommandText = "SELECT * FROM ITEM_DEFINITION;";
-
-                    using (IDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            items.Add(new ItemDefinition
-                            {
-                                Id = reader.GetInt32(0),
-                                Stackable = reader.GetInt32(1) == 1,
-                                MaxAmount = reader.GetInt32(2),
-                                Name = reader.GetString(3),
-                                Description = reader.GetString(4)
-                            });
-                        }
-                    }
-                }
-            }
+        try {
+            return _connection.Table<ItemDefinition>().ToList();
+        } catch (Exception ex) {
+            Debug.LogError($"[SQLite] Failed to get items: {ex.Message}");
+            return new List<ItemDefinition>();
         }
-        catch (Exception ex)
-        {
-            Debug.LogError($"[SQLite] Read failed: {ex.Message}");
-        }
-
-        return items;
     }
 
     #endregion
-
-    #region Table Creation
-    private void CreateItemTable(IDbConnection connection) {
-        using (IDbCommand command = connection.CreateCommand()) {
-            command.CommandText = @"CREATE TABLE IF NOT EXISTS ITEM_DEFINITION (
-            id INTEGER PRIMARY KEY AUTOINCREMENT, 
-            stackable INTEGER,
-            max_amount INTEGER, 
-            name TET, 
-            description TEXT)";
-
-            command.ExecuteNonQuery();
-        }
-    }
-
-    private void CreatePlayer(IDbConnection connection) {
-        using (IDbCommand command = connection.CreateCommand()) {
-            command.CommandText =
-            @"CREATE TABLE IF NOT EXISTS PLAYER(
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT,
-                description TEXT,
-                element 
-            )";
-
-            command.ExecuteNonQuery();
-        }
-    }
-
-    private void CreateInventory(IDbConnection connection){
-        using(IDbCommand command = connection.CreateCommand()){
-            command.CommandText = 
-            @"CREATE TABLE IF NOT EXISTS INVENTORY(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER FOREIGN KEY,
-            max_slots INTEGER)";
-        }
-    }
-
-    private void CreateItems(IDbConnection connection) {
-        using (IDbCommand command = connection.CreateCommand()){
-            command.CommandText =
-            @"CREATE TABLE IF NOT EXISTS INVENTORY_ITEM(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            item_definition_id INTEGER FOREIGN KEY,
-            inventory_id INTEGER FOREIGN KEY,
-            slot_index INTEGER,
-            amount INTEGER)";
-        }
-    }
-    #endregion
-    public enum Element { 
-        Fire,
-        Wind,
-        Dirt,
-        Water
-    }
-
-    private void CreateUsers(IDbConnection connection) {
-        using (IDbCommand command = connection.CreateCommand()) {
-            command.CommandText =
-            @"CREATE TABLE IF NOT EXISTS USERS(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            password_hash TEXT NOT NULL)";
-        }
-    }
-    public class ItemDefinition {
-        public int Id;
-        public bool Stackable;
-        public int MaxAmount;
-        public string Name;
-        public string Description;
-    }
 }

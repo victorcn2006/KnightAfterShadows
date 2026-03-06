@@ -10,6 +10,7 @@ public class ActionButtonManager : MonoBehaviour, IPointerEnterHandler, ISelectH
         PLAY,
         OPTIONS,
         RETURN,
+        USER_MANAGMENT,
         EXIT
     }
     [SerializeField] private string sceneToLoad;
@@ -60,6 +61,9 @@ public class ActionButtonManager : MonoBehaviour, IPointerEnterHandler, ISelectH
                 SceneManager.LoadScene(sceneToLoad);
                 break;
             case ACTIONS.RETURN:
+                SceneManager.LoadScene(sceneToLoad);
+                break;
+            case ACTIONS.USER_MANAGMENT:
                 SceneManager.LoadScene(sceneToLoad);
                 break;
             case ACTIONS.EXIT:

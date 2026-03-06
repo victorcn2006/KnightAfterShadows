@@ -596,7 +596,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneToLoad: 
-  action: 2
+  action: 4
   clickSound:
     Guid:
       Data1: 818897817
