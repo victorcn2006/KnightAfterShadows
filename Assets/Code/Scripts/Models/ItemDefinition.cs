@@ -7,6 +7,8 @@ public class ItemDefinition
 
     public int stackable { get; set; }
     public int max_amount { get; set; }
+    public int price { get; set; }
+    public string sprite_name { get; set; }
     public string name { get; set; }
     public string description { get; set; }
 }
