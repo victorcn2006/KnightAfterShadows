@@ -20,7 +20,10 @@ public class PlayerMovement : MonoBehaviour {
     private void Awake() {
         _rb = GetComponent<Rigidbody2D>();
         _playerStats = GetComponent<PlayerStats>();
-
+        if (!_controls) {
+            Debug.LogWarning("Controls input action asset is null");
+            return;
+        }
         _moveAction = _controls.FindAction("Move");
         _dashAction = _controls.FindAction("Dash");
     }
