@@ -52,6 +52,7 @@ public class PlayerMovement : MonoBehaviour {
 
         Vector2 dashDir = _lastDirection;
 
+
         float elapsed = 0f;
 
         while (elapsed < _playerStats.dashDuration) {

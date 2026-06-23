@@ -356,18 +356,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1951031206}
     m_Modifications:
-    - target: {fileID: 117424257013679690, guid: 3de6da3fabd3bf14b85454385a8a950c, type: 3}
-      propertyPath: speed
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 117424257013679690, guid: 3de6da3fabd3bf14b85454385a8a950c, type: 3}
-      propertyPath: dashSpeed
-      value: 9.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 117424257013679690, guid: 3de6da3fabd3bf14b85454385a8a950c, type: 3}
-      propertyPath: dashDuration
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 2197181847062592309, guid: 3de6da3fabd3bf14b85454385a8a950c, type: 3}
       propertyPath: m_Name
       value: Player
