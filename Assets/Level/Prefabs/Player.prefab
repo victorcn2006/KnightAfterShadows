@@ -11,8 +11,10 @@ GameObject:
   - component: {fileID: 6647503849604592174}
   - component: {fileID: 3050646585723157966}
   - component: {fileID: 8474622213142260856}
+  - component: {fileID: 8904191798197978100}
   - component: {fileID: 117424257013679690}
-  - component: {fileID: 9052727042813347304}
+  - component: {fileID: 6479542154318456425}
+  - component: {fileID: 6931211530638791512}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -100,6 +102,20 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: -0.013554454}
   m_Size: {x: 1, y: 1.051188}
   m_Direction: 0
+--- !u!114 &8904191798197978100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2197181847062592309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb4a320f7406c2349997d75afba0b9de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player
+  _controls: {fileID: -944628639613478452, guid: dcac55833c5ab1c4eb871df5bff41773, type: 3}
+  _animator: {fileID: 7181348448942474205}
 --- !u!114 &117424257013679690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,10 +130,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
   health: 100
   speed: 4
+  damage: 0
+  dashCooldown: 1
   dashSpeed: 8
   dashDuration: 0.5
-  dashCooldown: 1
---- !u!114 &9052727042813347304
+--- !u!114 &6479542154318456425
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,7 +146,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00fa499d9f3b6a241a42890f5ee428ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  _controls: {fileID: -944628639613478452, guid: dcac55833c5ab1c4eb871df5bff41773, type: 3}
+--- !u!114 &6931211530638791512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2197181847062592309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65147cfc0eb58fb498eed5a880c87e1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DashController
 --- !u!1 &3683777814821523714
 GameObject:
   m_ObjectHideFlags: 0
