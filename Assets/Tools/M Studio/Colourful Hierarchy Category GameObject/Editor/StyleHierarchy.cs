@@ -28,8 +28,10 @@ namespace MStudio
         {
             //To make sure there is no error on the first time the tool imported in project
             if (dataArray.Length == 0) return;
+            #pragma warning disable 0618
+                UnityEngine.Object instance = EditorUtility.InstanceIDToObject(instanceID);
+            #pragma warning restore 0618
 
-            UnityEngine.Object instance = EditorUtility.InstanceIDToObject(instanceID);
 
             if (instance != null)
             {

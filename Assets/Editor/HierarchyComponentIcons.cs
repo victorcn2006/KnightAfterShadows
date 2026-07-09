@@ -43,7 +43,9 @@ public static class HierarchyComponentIcons
     {
         if (!Enabled) return;
 
-        GameObject go = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
+        #pragma warning disable 0618
+            GameObject go = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
+        #pragma warning restore 0618    
         if (go == null) return;
 
         var components = go.GetComponents<Component>();
