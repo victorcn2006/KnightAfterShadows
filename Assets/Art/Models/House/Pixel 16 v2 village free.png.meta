@@ -1,0 +1,302 @@
+fileFormatVersion: 2
+guid: b0f9d15dc1820654ab0fc3c5563bc94b
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Pixel 16 v2 village free_0
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 52
+        width: 80
+        height: 112
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1b4c19c973d789b4790196b41bbdc243
+      internalID: -1980011680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pixel 16 v2 village free_1
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 52
+        width: 128
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5e87a00ba1e4d04787bdbcb3a745753
+      internalID: 1307944112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Pixel 16 v2 village free_0: -1980011680
+      Pixel 16 v2 village free_1: 1307944112
+      Pixel 16 v2 village free_10: -2040453339
+      Pixel 16 v2 village free_100: -107001749
+      Pixel 16 v2 village free_101: 1093710335
+      Pixel 16 v2 village free_102: -1390154687
+      Pixel 16 v2 village free_103: -1521099231
+      Pixel 16 v2 village free_104: -664159954
+      Pixel 16 v2 village free_105: 138822106
+      Pixel 16 v2 village free_106: -1067817957
+      Pixel 16 v2 village free_107: 1382710446
+      Pixel 16 v2 village free_108: 1982417050
+      Pixel 16 v2 village free_109: -99561505
+      Pixel 16 v2 village free_11: 1735199614
+      Pixel 16 v2 village free_110: 1031302180
+      Pixel 16 v2 village free_111: -123915633
+      Pixel 16 v2 village free_112: 1113150430
+      Pixel 16 v2 village free_113: 59311694
+      Pixel 16 v2 village free_114: -1508344040
+      Pixel 16 v2 village free_115: -303353537
+      Pixel 16 v2 village free_116: -1656126279
+      Pixel 16 v2 village free_117: 1888339680
+      Pixel 16 v2 village free_118: -421994177
+      Pixel 16 v2 village free_119: 721789693
+      Pixel 16 v2 village free_12: 260537659
+      Pixel 16 v2 village free_120: 336201636
+      Pixel 16 v2 village free_121: -314861955
+      Pixel 16 v2 village free_122: 414422715
+      Pixel 16 v2 village free_123: -129615851
+      Pixel 16 v2 village free_124: 859418192
+      Pixel 16 v2 village free_125: -1011793982
+      Pixel 16 v2 village free_126: -1445473315
+      Pixel 16 v2 village free_127: -1463042183
+      Pixel 16 v2 village free_13: 695738119
+      Pixel 16 v2 village free_14: 1753079648
+      Pixel 16 v2 village free_15: 1675784115
+      Pixel 16 v2 village free_16: 1264197609
+      Pixel 16 v2 village free_17: 1116322980
+      Pixel 16 v2 village free_18: -430513262
+      Pixel 16 v2 village free_19: 870166608
+      Pixel 16 v2 village free_2: 1305920909
+      Pixel 16 v2 village free_20: 2002949934
+      Pixel 16 v2 village free_21: 1415319804
+      Pixel 16 v2 village free_22: -1794190074
+      Pixel 16 v2 village free_23: -1968238701
+      Pixel 16 v2 village free_24: -195258767
+      Pixel 16 v2 village free_25: -1163890506
+      Pixel 16 v2 village free_26: 466650948
+      Pixel 16 v2 village free_27: 671563078
+      Pixel 16 v2 village free_28: 1877275799
+      Pixel 16 v2 village free_29: 1376010430
+      Pixel 16 v2 village free_3: -283866965
+      Pixel 16 v2 village free_30: 33013198
+      Pixel 16 v2 village free_31: 1399496025
+      Pixel 16 v2 village free_32: -1952586838
+      Pixel 16 v2 village free_33: -741974578
+      Pixel 16 v2 village free_34: 944266471
+      Pixel 16 v2 village free_35: -1566730455
+      Pixel 16 v2 village free_36: 1404300022
+      Pixel 16 v2 village free_37: -2100899632
+      Pixel 16 v2 village free_38: 1646162332
+      Pixel 16 v2 village free_39: -1871408671
+      Pixel 16 v2 village free_4: -464546565
+      Pixel 16 v2 village free_40: 1433146692
+      Pixel 16 v2 village free_41: 1700224141
+      Pixel 16 v2 village free_42: 1191276741
+      Pixel 16 v2 village free_43: -2133652050
+      Pixel 16 v2 village free_44: -966213289
+      Pixel 16 v2 village free_45: -1037208527
+      Pixel 16 v2 village free_46: 2134405900
+      Pixel 16 v2 village free_47: -1188987721
+      Pixel 16 v2 village free_48: 910063550
+      Pixel 16 v2 village free_49: 191445411
+      Pixel 16 v2 village free_5: -862514495
+      Pixel 16 v2 village free_50: 988874804
+      Pixel 16 v2 village free_51: -1143467544
+      Pixel 16 v2 village free_52: 1589779250
+      Pixel 16 v2 village free_53: 1803211133
+      Pixel 16 v2 village free_54: 205149523
+      Pixel 16 v2 village free_55: 86617760
+      Pixel 16 v2 village free_56: -1091825702
+      Pixel 16 v2 village free_57: -10513922
+      Pixel 16 v2 village free_58: -402073159
+      Pixel 16 v2 village free_59: 2140308203
+      Pixel 16 v2 village free_6: 1932936061
+      Pixel 16 v2 village free_60: -2038690267
+      Pixel 16 v2 village free_61: -631486569
+      Pixel 16 v2 village free_62: 723374643
+      Pixel 16 v2 village free_63: 1389081140
+      Pixel 16 v2 village free_64: 469987873
+      Pixel 16 v2 village free_65: 197035648
+      Pixel 16 v2 village free_66: 192410336
+      Pixel 16 v2 village free_67: 1599666671
+      Pixel 16 v2 village free_68: -1058235732
+      Pixel 16 v2 village free_69: 309950833
+      Pixel 16 v2 village free_7: -1641070082
+      Pixel 16 v2 village free_70: -700994798
+      Pixel 16 v2 village free_71: 1181237070
+      Pixel 16 v2 village free_72: 212393012
+      Pixel 16 v2 village free_73: -2145185675
+      Pixel 16 v2 village free_74: 954201341
+      Pixel 16 v2 village free_75: -970825364
+      Pixel 16 v2 village free_76: 410066613
+      Pixel 16 v2 village free_77: 1392391354
+      Pixel 16 v2 village free_78: 1255866546
+      Pixel 16 v2 village free_79: 1735887852
+      Pixel 16 v2 village free_8: 740100577
+      Pixel 16 v2 village free_80: 1914007903
+      Pixel 16 v2 village free_81: 889724609
+      Pixel 16 v2 village free_82: 210657598
+      Pixel 16 v2 village free_83: -1285151652
+      Pixel 16 v2 village free_84: 1264140145
+      Pixel 16 v2 village free_85: 633455185
+      Pixel 16 v2 village free_86: -1834953733
+      Pixel 16 v2 village free_87: 1899525945
+      Pixel 16 v2 village free_88: 702849112
+      Pixel 16 v2 village free_89: 1825458900
+      Pixel 16 v2 village free_9: 1942394356
+      Pixel 16 v2 village free_90: -2050159409
+      Pixel 16 v2 village free_91: -741335531
+      Pixel 16 v2 village free_92: -194412559
+      Pixel 16 v2 village free_93: 1317040569
+      Pixel 16 v2 village free_94: -1866355885
+      Pixel 16 v2 village free_95: -1156295253
+      Pixel 16 v2 village free_96: -2061195323
+      Pixel 16 v2 village free_97: 682840939
+      Pixel 16 v2 village free_98: -1723820632
+      Pixel 16 v2 village free_99: -2085527862
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
